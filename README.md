@@ -1,4 +1,15 @@
 CMPUT404-assignment-webserver
+
+forked from abramhindle/CMPUT404-assignment-webserver 
+
+Succeed Apache 2.0 license from the origin, and all modifications are licensed under the Apache 2.0 license by Tianying Xia. 
+
+Collaborators are listed below, if there is any: 
+
+
+Following are the content from the original README.md from https://github.com/abramhindle/CMPUT404-assignment-webserver 
+
+CMPUT404-assignment-webserver
 =============================
 
 CMPUT404-assignment-webserver
