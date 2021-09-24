@@ -136,7 +136,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             <p>The document has moved.</p>
             </body></html>
             '''
-            self.response_str = version + ' ' + str(self.status_code) + ' ' + status + '\r\n' + 'Date: ' + str(datetime.datetime.now()) + '\r\n' + 'Content-Type: ' + content_type + '\r\n' + 'Content-Length: ' + str( len(self.se_body) ) + '\r\n' + 'Connection: ' + 'close' + 'Location: ' + 'http://' + redirect_path + '\r\n' +  '\r\n' + self.se_body
+            self.response_str = version + ' ' + str(self.status_code) + ' ' + status + '\r\n' + 'Date: ' + str(datetime.datetime.now()) + '\r\n' + 'Content-Type: ' + 'text/html' + '\r\n' + 'Content-Length: ' + str( len(self.se_body) ) + '\r\n' + 'Connection: ' + 'close' + 'Location: ' + 'http://' + redirect_path + '\r\n' +  '\r\n' + self.se_body
             #print(self.response_str)
             
         elif self.status_code == 404:
@@ -150,7 +150,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             <p>The document is not found.</p>
             </body></html>
             '''
-            self.response_str = version + ' ' + str(self.status_code) + ' ' + status + '\r\n' + 'Date: ' + str(datetime.datetime.now()) + '\r\n' + 'Content-Type: ' + content_type + '\r\n' + 'Content-Length: ' + str( len(self.se_body) ) + '\r\n' + 'Connection: ' + 'close' + '\r\n' +  '\r\n' + self.se_body
+            self.response_str = version + ' ' + str(self.status_code) + ' ' + status + '\r\n' + 'Date: ' + str(datetime.datetime.now()) + '\r\n' + 'Content-Type: ' + 'text/html' + '\r\n' + 'Content-Length: ' + str( len(self.se_body) ) + '\r\n' + 'Connection: ' + 'close' + '\r\n' +  '\r\n' + self.se_body
             #print(self.response_str)
             
         elif self.status_code == 405:
@@ -164,7 +164,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             <p>The method is not allowed.</p>
             </body></html>
             '''
-            self.response_str = version + ' ' + str(self.status_code) + ' ' + status + '\r\n' + 'Date: ' + str(datetime.datetime.now()) + '\r\n' + 'Content-Type: ' + content_type + '\r\n' + 'Content-Length: ' + str( len(self.se_body) ) + '\r\n' + 'Connection: ' + 'close' + '\r\n' +  '\r\n' + self.se_body
+            self.response_str = version + ' ' + str(self.status_code) + ' ' + status + '\r\n' + 'Date: ' + str(datetime.datetime.now()) + '\r\n' + 'Content-Type: ' + 'text/html' + '\r\n' + 'Content-Length: ' + str( len(self.se_body) ) + '\r\n' + 'Connection: ' + 'close' + '\r\n' +  '\r\n' + self.se_body
             #print(self.response_str)
         
         # 2 print ("Got a request of: %s\n" % self.data)
