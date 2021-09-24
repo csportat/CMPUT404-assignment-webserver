@@ -96,7 +96,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 else:
                     self.status_code = 404
             else:
-                if os.path.exists(self.path):
+                if os.path.exists(self.path) and os.path.isfile(self.path):
                     file_path = self.path
                     rfile = open(file_path, mode='r')
                     self.se_body += rfile.read()
