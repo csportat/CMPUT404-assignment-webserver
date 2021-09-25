@@ -33,9 +33,7 @@ from urllib.parse import unquote
 class MyWebServer(socketserver.BaseRequestHandler):
     
     def handle(self):
-        # 1 self.data = self.request.recv(1024).strip()
-        '''
-        self.request.settimeout(1)
+        self.request.settimeout(0.09)
         self.full_data = b''
         try:
             while True:
@@ -44,12 +42,9 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     break
                 self.full_data += data # b-String 
         except socket.timeout:
-            break'''
-        self.full_data = self.request.recv(1024)
+            pass
         self.full_data_string = self.full_data.strip().decode() # String 
-        #print(self.full_data_string)
         self.full_data_line_list = self.full_data_string.split('\r\n') # List 
-        #print(self.full_data_line_list)
         
         # Start handling Request-Line 
         self.close_connection = False
@@ -58,14 +53,12 @@ class MyWebServer(socketserver.BaseRequestHandler):
         if not self.request_line:
             self.close_connection = True # Receive nothing 
             return
-        #print(self.request_line)
         self.command = None
         self.path = None
         self.request_line_words = self.request_line.split(' ')
         if len(self.request_line_words) == 0:
             self.status_code = 405
         if len(self.request_line_words) >= 3: # Check components amount 
-            #print(self.request_line_words)
             version = self.request_line_words[-1]
             try:
                 if not version.startswith('HTTP/'):
@@ -74,7 +67,6 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 if base_version_number != '1.1': # HTTP 1.1 compliant webserver
                     raise ValueError
             except (ValueError, IndexError):
-                #print('Not HTTP 1.1')
                 self.status_code = 405
         if len(self.request_line_words) == 2:
             self.status_code = 405
@@ -130,8 +122,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         if self.status_code == 200:
             status = 'OK'
             self.response_str = version + ' ' + str(self.status_code) + ' ' + status + '\r\n' + 'Date: ' + str(datetime.datetime.now()) + '\r\n' + 'Content-Type: ' + content_type + '\r\n' + 'Content-Length: ' + str( len(self.se_body) ) + '\r\n' + 'Connection: ' + 'keep-alive' + '\r\n' +  '\r\n' + self.se_body
-            #print(self.response_str)
-        
+            
         elif self.status_code == 301:
             status = 'Moved Permanently'
             self.se_body += '''
@@ -144,7 +135,6 @@ class MyWebServer(socketserver.BaseRequestHandler):
             </body></html>
             '''
             self.response_str = version + ' ' + str(self.status_code) + ' ' + status + '\r\n' + 'Date: ' + str(datetime.datetime.now()) + '\r\n' + 'Content-Type: ' + 'text/html' + '\r\n' + 'Content-Length: ' + str( len(self.se_body) ) + '\r\n' + 'Connection: ' + 'close' + 'Location: ' + 'http://' + redirect_path + '\r\n' +  '\r\n' + self.se_body
-            #print(self.response_str)
             
         elif self.status_code == 404:
             status = 'Not Found'
@@ -158,7 +148,6 @@ class MyWebServer(socketserver.BaseRequestHandler):
             </body></html>
             '''
             self.response_str = version + ' ' + str(self.status_code) + ' ' + status + '\r\n' + 'Date: ' + str(datetime.datetime.now()) + '\r\n' + 'Content-Type: ' + 'text/html' + '\r\n' + 'Content-Length: ' + str( len(self.se_body) ) + '\r\n' + 'Connection: ' + 'close' + '\r\n' +  '\r\n' + self.se_body
-            #print(self.response_str)
             
         elif self.status_code == 405:
             status = 'Method Not Allowed'
@@ -172,13 +161,9 @@ class MyWebServer(socketserver.BaseRequestHandler):
             </body></html>
             '''
             self.response_str = version + ' ' + str(self.status_code) + ' ' + status + '\r\n' + 'Date: ' + str(datetime.datetime.now()) + '\r\n' + 'Content-Type: ' + 'text/html' + '\r\n' + 'Content-Length: ' + str( len(self.se_body) ) + '\r\n' + 'Connection: ' + 'close' + '\r\n' +  '\r\n' + self.se_body
-            #print(self.response_str)
-        
-        # 2 print ("Got a request of: %s\n" % self.data)
-        # 3 self.request.sendall(bytearray("OK",'utf-8'))
+            
         
         self.request.sendall( self.response_str.encode() )
-        
         
 
 if __name__ == "__main__":
