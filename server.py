@@ -1,5 +1,5 @@
 #  coding: utf-8 
-import socketserver
+import socketserver, socket
 import sys, os, datetime
 from urllib.parse import unquote
 
@@ -35,12 +35,16 @@ class MyWebServer(socketserver.BaseRequestHandler):
     def handle(self):
         # 1 self.data = self.request.recv(1024).strip()
         '''
+        self.request.settimeout(1)
         self.full_data = b''
-        while True:
-            data = self.request.recv(1024)
-            if not data:
-                break
-            self.full_data += data # b-String '''
+        try:
+            while True:
+                data = self.request.recv(1024)
+                if not data or data == b'':
+                    break
+                self.full_data += data # b-String 
+        except socket.timeout:
+            break'''
         self.full_data = self.request.recv(1024)
         self.full_data_string = self.full_data.strip().decode() # String 
         #print(self.full_data_string)
@@ -57,7 +61,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         #print(self.request_line)
         self.command = None
         self.path = None
-        self.request_line_words = self.request_line.split()
+        self.request_line_words = self.request_line.split(' ')
         if len(self.request_line_words) == 0:
             self.status_code = 405
         if len(self.request_line_words) >= 3: # Check components amount 
@@ -81,7 +85,10 @@ class MyWebServer(socketserver.BaseRequestHandler):
         
         # Handle path 
         self.se_body = ''
-        if self.status_code != 405:
+        www_path = os.getcwd() + '/www'
+        if not os.path.commonprefix( [www_path, os.path.realpath(self.path)] ) == www_path:
+            self.status_code = 404
+        if self.status_code != 405 and self.status_code != 404:
             file_path = None
             redirect_path = None
             content_type = None
